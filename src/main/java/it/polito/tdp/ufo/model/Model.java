@@ -8,7 +8,6 @@ import java.util.Set;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 
@@ -18,6 +17,8 @@ public class Model {
 	private SightingsDAO dao ;
 	private Graph<String, DefaultEdge> grafo;
 	private List <String> visita ;
+	private List<String> bestAvvistamenti;
+	private List <String> successivi;
 	
 	public Model () {
 		this.dao = new SightingsDAO ();
@@ -44,6 +45,7 @@ public class Model {
 			}
 		}
 		
+		//METODO VIDEO CHE RITORNA PIU ARCHI
 		/*for (String s1 : this.grafo.vertexSet()) {
 			for (String s2 : this.grafo.vertexSet()) {
 				if (!s1.equals(s2)) {
@@ -89,6 +91,35 @@ public class Model {
 	}
 	public int visitaSize() {
 		return this.visita.size();
+	}
+	
+	//METODO RICORSIVO CHE DETERMINA IL CAMMINO PIU LUNGO DI AVVISTAMENTI SUCCESSIVI
+	public List<String> trovaAvvistamenti (String partenza){
+		this.bestAvvistamenti= new ArrayList <>();
+		List<String> parziale = new ArrayList<>();
+		parziale.add(partenza);
+		
+		trovaRicorsivo(parziale,partenza);
+		return this.bestAvvistamenti;
+	}
+
+	private void trovaRicorsivo(List<String> parziale, String partenza) {
+		this.successivi = Graphs.successorListOf(this.grafo, partenza);
+		
+		if (successivi.isEmpty()) { //non ci sono più successori
+			if (parziale.size()>this.bestAvvistamenti.size()) {
+				this.bestAvvistamenti = new ArrayList<>(parziale);
+			}
+			return;
+		}
+		
+		for (String s: successivi) {
+			if (!parziale.contains(s)) {
+				parziale.add(s);
+				this.trovaRicorsivo(parziale, s);
+				parziale.remove(parziale.size()-1);
+			}
+		}
 	}
 	
 	

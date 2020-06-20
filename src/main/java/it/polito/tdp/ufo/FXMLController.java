@@ -33,21 +33,41 @@ public class FXMLController {
     void handleAnalizza(ActionEvent event) {
     	txtResult.clear();
     	String stato = boxStato.getValue();
-    	
+    	if (stato==null) {
+    		txtResult.appendText("Selezionare uno stato.");
+    		return;
+    	}
+    
     	txtResult.appendText("Stati precedenti.\n");
-    	txtResult.appendText(this.model.precedenti(stato)+"\n");
-    	txtResult.appendText("\n\nStati successori. \n");
-    	txtResult.appendText(this.model.successori(stato)+"\n");
-    	txtResult.appendText("\n\nStati raggiungibili. \n");
-    	txtResult.appendText(this.model.raggiungibili(stato)+"\n");
-    	txtResult.appendText("\n\n# stati raggiungibili: "+this.model.visitaSize());
-
+    	if (this.model.precedenti(stato).isEmpty()) {
+    		txtResult.appendText("Vertce isolato.");
+    	} else {
+    		txtResult.appendText(this.model.precedenti(stato)+"\n");
+    	}
+    	if (this.model.successori(stato).isEmpty()) {
+    		txtResult.appendText("Vertce isolato.");
+    	} else {
+    		txtResult.appendText("\n\nStati successori. \n");
+        	txtResult.appendText(this.model.successori(stato)+"\n");
+    	}
+    	if (this.model.raggiungibili(stato).isEmpty()) {
+    		txtResult.appendText("Vertce isolato.");
+    	} else {
+    		txtResult.appendText("\n\nStati raggiungibili. \n");
+        	txtResult.appendText(this.model.raggiungibili(stato)+"\n");
+        	txtResult.appendText("\n\n# stati raggiungibili: "+this.model.visitaSize());
+    	}
+    	
     }
 
     @FXML
     void handleAvvistamenti(ActionEvent event) {
     	txtResult.clear();
     	Avvistamenti a = boxAnno.getValue();
+    	if (a==null) {
+    		txtResult.appendText("Selezionare un anno.");
+    		return;
+    	}
     	this.model.creaGrafo(a);
     	this.boxStato.getItems().addAll(this.model.getVertex());
     	
@@ -56,7 +76,16 @@ public class FXMLController {
 
     @FXML
     void handleSequenza(ActionEvent event) {
-
+    	txtResult.clear();
+    	String stato = boxStato.getValue();
+    	if (stato==null) {
+    		txtResult.appendText("Selezionare uno stato.");
+    		return;
+    	}
+    	
+    	txtResult.appendText("BEST PERCORSO: \n");
+    	txtResult.appendText(this.model.trovaAvvistamenti(stato)+"\n");
+    	
     }
 
     @FXML

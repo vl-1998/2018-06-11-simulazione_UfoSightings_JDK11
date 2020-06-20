@@ -7,7 +7,6 @@ public class Arco {
 	/**
 	 * @param s1
 	 * @param s2
-	 * @param nArchi
 	 */
 	public Arco(String s1, String s2) {
 		super();
